@@ -1,0 +1,10 @@
+. {
+    debug
+    log {
+        class all
+    }
+    prometheus :15353
+    bind 0.0.0.0
+    drop AAAA
+    # forward . 10.255.0.101
+}
