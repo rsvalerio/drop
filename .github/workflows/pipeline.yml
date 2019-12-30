@@ -16,8 +16,8 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
 
-    - name: Format code
-      run: make fmt
+    - name: Build Code
+      run: make build
 
     - name: Test
       run: make test

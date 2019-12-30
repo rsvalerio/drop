@@ -9,19 +9,14 @@ GOPATH?=$(HOME)/go
 
 all: fmt test
 
-.PHONY: docker
-docker:
-	rm coredns || true
-	cp /home/rodrigo/projects/coredns/coredns .
-	docker build -t coredns-drop . --no-cache
+.PHONY: build
+build: fmt
 
-run:
-	docker run \
-		-p 25353:53/udp \
-		-p 15353:15353 \
-		-v $(shell pwd)/Corefile:/etc/coredns/Corefile \
-		--rm --name coredns-drop \
-		coredns-drop
+.PHONY: push
+push:
+	@echo "Starting push..."
+	@echo "Nothing to push..."
+	@echo "Finishing push..."
 
 .PHONY: fmt
 fmt:
@@ -33,6 +28,22 @@ test:
 	@echo "Running tests..."
 	@$(COVER)
 
+# Docker targets
+.PHONY: docker
+docker:
+	rm coredns || true
+	cp /home/rodrigo/projects/coredns/coredns .
+	docker build -t coredns-drop . --no-cache
+
+.PHONY: run
+run:
+	docker run \
+		-p 25353:53/udp \
+		-p 15353:15353 \
+		-v $(shell pwd)/Corefile:/etc/coredns/Corefile \
+		--rm --name coredns-drop \
+		coredns-drop
+
 # Use the 'release' target to start a release
 .PHONY: release
 release: commit push
@@ -43,9 +54,3 @@ commit:
 	@echo Committing release $(VERSION)
 	git commit -am"Release $(VERSION)"
 	git tag $(TAG)
-
-.PHONY: push
-push:
-	@echo Pushing release $(VERSION) to master
-	git push --tags
-	git push
