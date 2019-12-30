@@ -26,6 +26,7 @@ jobs:
       run: make push
 
   push:
+    needs: build
     runs-on: self-hosted
     steps:
       - name: Push
